@@ -37,13 +37,21 @@ try:
     # --- VISUALIZATION: SANKEY DIAGRAM ---
     st.subheader("Money Flow Visualization")
     
-    # We need to transform the data into Source -> Target for Sankey
-    # For this demo, we assume 'Epstein Accounts' is always the Source
-    # In a real version, you'd extract the 'Source' from the text logic
+    # Add a slider to control graph density
+    top_n = st.slider("Show Top N Entities", 5, 100, 20)
     
-    sources = ["Epstein/Shell Co"] * len(filtered_df)
-    targets = filtered_df['entities'].apply(lambda x: x.split(',')[0] if isinstance(x, str) and x.strip() else "Unknown").tolist()
-    values = [1] * len(filtered_df) # Simple count weighting (improve this by parsing actual $ amounts)
+    # Aggregate data to prevent congestion
+    # Extract the primary entity (first one listed)
+    primary_entities = filtered_df['entities'].apply(
+        lambda x: x.split(',')[0] if isinstance(x, str) and x.strip() else "Unknown"
+    )
+    
+    # Count occurrences and take top N
+    entity_counts = primary_entities.value_counts().head(top_n)
+    
+    sources = ["Epstein/Shell Co"] * len(entity_counts)
+    targets = entity_counts.index.tolist()
+    values = entity_counts.values.tolist()
 
     # Map labels to integers for Plotly
     all_nodes = list(set(sources + targets))
