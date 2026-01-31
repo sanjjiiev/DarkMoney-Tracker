@@ -39,7 +39,7 @@ def extract_financials():
     
     # Iterate through documents (using a sample of 5000 for speed in this demo)
     # Remove [:5000] to run on the full set
-    for index, row in df.iloc[:5000].iterrows(): 
+    for index, row in df.iterrows(): 
         text = str(row.get('text', '')) # Adjust 'text' if column name differs
         
         # Split into sentences to keep context tight
