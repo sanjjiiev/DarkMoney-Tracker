@@ -1,1 +1,7 @@
-data/
+# Ignore the massive raw data
+data/epstein_full_text.csv
+
+# Ignore system files
+__pycache__/
+*.pyc
+.DS_Store
