@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import os
+import re
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, "..", "data", "clean_transactions.csv")
@@ -20,10 +21,17 @@ try:
     df = load_data()
     
     # --- FILTERS (MAIN PAGE) ---
-    search_term = st.text_input("Search Entity", placeholder="Type to filter (e.g., 'Harvard')...")
+    # Get all unique entities for the dropdown
+    all_entities = set()
+    df['entities'].dropna().apply(lambda x: all_entities.update([e.strip() for e in x.split(',') if e.strip()]))
+    sorted_entities = sorted(list(all_entities))
     
-    if search_term:
-        filtered_df = df[df['entities'].str.contains(search_term, case=False, regex=False, na=False)]
+    selected_entities = st.multiselect("Search Ledger", options=sorted_entities, placeholder="Select entities to filter...")
+    
+    if selected_entities:
+        # Filter if any selected entity is present in the row
+        pattern = '|'.join([re.escape(e) for e in selected_entities])
+        filtered_df = df[df['entities'].str.contains(pattern, case=False, regex=True, na=False)]
     else:
         filtered_df = df
         
@@ -51,8 +59,8 @@ try:
     
     # --- DATA PREPARATION ---
     # Extract the primary entity (first one listed)
+    # Use 'df' (full dataset) so graphs remain static while searching
     primary_entities = df['entities'].apply(
-
         lambda x: x.split(',')[0] if isinstance(x, str) and x.strip() else "Unknown"
     )
     
