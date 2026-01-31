@@ -2,7 +2,7 @@
 title: Darkmoney Tracker
 emoji: 💸
 colorFrom: green
-colorTo: black
+colorTo: gray
 sdk: streamlit
 sdk_version: "1.41.1"
 app_file: src/3_dashboard.py
