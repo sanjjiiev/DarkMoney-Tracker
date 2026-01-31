@@ -1,11 +1,10 @@
 huggingface_hub
 pandas
-# Pin Streamlit to a modern version to avoid conflicts
-streamlit>=1.30.0
+streamlit
 plotly
 regex
-# Pin Altair to version 4 to prevent the "No module named altair.vegalite.v4" error
 altair<5
-spacy
-# Install the specific language model required for your NLP
+# STRICT PIN: The model below requires Spacy 3.7.x. Do not let it upgrade to 3.8.
+spacy>=3.7.0,<3.8.0
+# The model file
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
