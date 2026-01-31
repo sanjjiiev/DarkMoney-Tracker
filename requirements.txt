@@ -1,10 +1,8 @@
 huggingface_hub
 pandas
-streamlit
 plotly
 regex
-altair<5
-# STRICT PIN: The model below requires Spacy 3.7.x. Do not let it upgrade to 3.8.
+# Pin Spacy to match the model version below
 spacy>=3.7.0,<3.8.0
-# The model file
+# Direct link to the model
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
