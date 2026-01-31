@@ -20,12 +20,10 @@ try:
     df = load_data()
     
     # --- FILTERS (MAIN PAGE) ---
-    col_search, col_top = st.columns([3, 1])
-    search_term = col_search.text_input("Search Entity", placeholder="Type to filter (e.g., 'Harvard')...")
-    top_n = col_top.slider("Max Entities", 5, 100, 15)
+    search_term = st.text_input("Search Entity", placeholder="Type to filter (e.g., 'Harvard')...")
     
     if search_term:
-        filtered_df = df[df['entities'].str.contains(search_term, case=False, na=False)]
+        filtered_df = df[df['entities'].str.contains(search_term, case=False, regex=False, na=False)]
     else:
         filtered_df = df
         
@@ -37,10 +35,24 @@ try:
     col2.metric("Unique Entities Involved", unique_entities)
 
     st.divider()
+
+    # --- EVIDENCE TABLE ---
+    st.subheader("Transaction Ledger")
+    st.dataframe(
+        filtered_df[['amount', 'entities', 'context']], 
+        use_container_width=True,
+        hide_index=True
+    )
+    
+    st.divider()
+    
+    # --- GRAPH SETTINGS ---
+    top_n = st.slider("Max Entities to Visualize", 5, 100, 15)
     
     # --- DATA PREPARATION ---
     # Extract the primary entity (first one listed)
-    primary_entities = filtered_df['entities'].apply(
+    primary_entities = df['entities'].apply(
+
         lambda x: x.split(',')[0] if isinstance(x, str) and x.strip() else "Unknown"
     )
     
@@ -78,12 +90,17 @@ try:
     
     with col_viz1:
         st.subheader("Top Entities (Bar)")
+        # Convert to DataFrame to avoid Plotly Express ambiguity error
+        bar_data = entity_counts.reset_index()
+        bar_data.columns = ['Entity', 'Count']
+        
         fig_bar = px.bar(
-            x=entity_counts.values,
-            y=entity_counts.index,
+            bar_data,
+            x='Count',
+            y='Entity',
             orientation='h',
-            labels={'x': 'Transaction Count', 'y': 'Entity'},
-            color=entity_counts.values,
+            labels={'Count': 'Transaction Count', 'Entity': 'Entity'},
+            color='Count',
             color_continuous_scale='Viridis'
         )
         fig_bar.update_layout(yaxis={'categoryorder':'total ascending'})
@@ -105,15 +122,6 @@ try:
             color_continuous_scale='RdBu'
         )
         st.plotly_chart(fig_tree, use_container_width=True)
-
-    # --- EVIDENCE TABLE ---
-    st.divider()
-    st.subheader("Transaction Ledger")
-    st.dataframe(
-        filtered_df[['amount', 'entities', 'context']], 
-        use_container_width=True,
-        hide_index=True
-    )
 
 except FileNotFoundError:
     st.error("Data file not found. Please run '2_analyze.py' first.")
