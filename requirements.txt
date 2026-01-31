@@ -2,7 +2,9 @@ huggingface_hub
 pandas
 plotly
 regex
-# Pin Spacy to match the model version below
+# CRITICAL FIX: Prevent Numpy 2.0 from breaking Spacy
+numpy<2.0.0
+# Pin Spacy to match the model
 spacy>=3.7.0,<3.8.0
-# Direct link to the model
+# The model file
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
