@@ -8,6 +8,7 @@ sdk_version: "1.41.1"
 app_file: src/3_dashboard.py
 pinned: false
 license: mit
+python_version: "3.10"
 ---
 
 # DarkMoney-Tracker
