@@ -1,3 +1,15 @@
+---
+title: Darkmoney Tracker
+emoji: 💸
+colorFrom: green
+colorTo: black
+sdk: streamlit
+sdk_version: "1.41.1"
+app_file: src/3_dashboard.py
+pinned: false
+license: mit
+---
+
 # DarkMoney-Tracker
 
 A financial intelligence tool designed to analyze and visualize transaction flows from the Epstein documents (DOJ Archives). This project uses Natural Language Processing (NLP) to extract financial entities and amounts from unstructured text and presents them in an interactive dashboard.
